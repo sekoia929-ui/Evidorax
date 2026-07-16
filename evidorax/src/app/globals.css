@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  /* Surfaces */
+  --ink:        #16191C;
+  --paper:      #FFFFFF;
+  --panel:      #F6F6F3;
+  --panel-2:    #EFEEE8;
+  --line:       #E4E2DC;
+  --line-strong:#CFCCC3;
+
+  /* Text */
+  --text-primary:   #16191C;
+  --text-secondary: #5C5F62;
+  --text-muted:     #8B8E88;
+
+  /* Roles */
+  --verified:      #0E6B57;
+  --verified-bg:    #E4F3EE;
+  --review:         #B4790C;
+  --review-bg:      #FBF0DC;
+  --contradicted:   #B23A2E;
+  --contradicted-bg:#FAEAE7;
+  --notfound:       #8B8E88;
+  --notfound-bg:    #EFEEE8;
+
+  /* Type */
+  --font-display: 'Source Serif 4', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+  --font-sans:    'Inter', -apple-system, sans-serif;
+
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--panel);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--verified-bg);
+  color: var(--verified);
+}
+
+/* Scrollbar — quiet, not default OS chrome */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
