@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { STAGE1_PROMPT, STAGE2_PROMPT, PASS3_PROMPT } from './prompts'
 
 const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY
+  apiKey: process.env.ANTHROPIC_API_KEY    ||  'placeholder-key'
 })
 
 const MODEL = 'claude-sonnet-4-6'
