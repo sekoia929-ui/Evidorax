@@ -143,7 +143,7 @@ export async function POST(request) {
 // Server-side PDF text extraction
 // For scanned PDFs with low text yield, fall back to Claude Vision in claude.js
 async function extractTextFromPdf(fileBlob) {
-  const pdfParse = (await import('pdf-parse')).default
+  const pdfParse = (await import('pdf-parse/lib/pdf-parse.js')).default
   const buffer = Buffer.from(await fileBlob.arrayBuffer())
   const data = await pdfParse(buffer)
   return data.text
