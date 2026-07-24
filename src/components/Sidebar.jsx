@@ -1,6 +1,5 @@
 'use client'
-
-export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, plan = 'free', papersUsed = 0, papersLimit = 5 }) {
+export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut }) {
   return (
     <aside style={{
       width: 260,
@@ -80,6 +79,17 @@ export default function Sidebar({ projects = [], activeProjectId, onSelectProjec
         })}
       </div>
 
+{userEmail && (
+        <div style={{ padding: '10px 20px', borderTop: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span className="mono" style={{ fontSize: 11, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>
+            {userEmail}
+          </span>
+          <button onClick={onSignOut} style={{ background: 'none', border: 'none', fontSize: 11, color: 'var(--text-secondary)', textDecoration: 'underline' }}>
+            Sign out
+          </button>
+        </div>
+      )}
+      
       {/* Usage strip */}
       <div style={{ padding: '14px 20px', borderTop: '1px solid var(--line)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
