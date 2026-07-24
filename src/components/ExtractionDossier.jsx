@@ -45,9 +45,18 @@ function EvidenceCard({ paper, extraction, verification }) {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <StatusPill status={paper.status} />
-          {verification && (
+       <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+  <StatusPill status={paper.status} />
+  {paper.status === 'error' && paper.error_message && (
+    <span
+      title={paper.error_message}
+      className="mono"
+      style={{ fontSize: 11, color: 'var(--contradicted)', maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+    >
+      {paper.error_message}
+    </span>
+  )}
+  {verification && (
             <VerificationLedger
               verified={verification.verified_count}
               inferred={0}
