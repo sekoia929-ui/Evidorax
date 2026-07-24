@@ -5,21 +5,23 @@ import Sidebar from '@/components/Sidebar'
 import Topbar from '@/components/Topbar'
 import UploadZone from '@/components/UploadZone'
 import ExtractionDossier from '@/components/ExtractionDossier'
-import { getProjects, getPapers, uploadPaper, checkPaperLimit } from '@/lib/supabase'
+import AuthGate from '@/components/AuthGate'
+import { getProjects, getPapers, uploadPaper, checkPaperLimit, createProject, supabase } from '@/lib/supabase'
 import { exportToExcel } from '@/lib/export'
 
-export default function DashboardPage() {
-  const [userId, setUserId] = useState(null) // set from auth session
+function Dashboard({ user }) {
+  const userId = user.id
   const [projects, setProjects] = useState([])
   const [activeProjectId, setActiveProjectId] = useState(null)
   const [papers, setPapers] = useState([])
   const [usage, setUsage] = useState({ used: 0, limit: 5 })
   const [loading, setLoading] = useState(false)
+  const [showNewProject, setShowNewProject] = useState(false)
+  const [newProjectName, setNewProjectName] = useState('')
 
   useEffect(() => {
-    if (!userId) return
-    getProjects(userId).then(setProjects)
-    checkPaperLimit(userId).then(setUsage)
+    getProjects(userId).then(setProjects).catch(() => {})
+    checkPaperLimit(userId).then(setUsage).catch(() => {})
   }, [userId])
 
   useEffect(() => {
@@ -27,6 +29,7 @@ export default function DashboardPage() {
     setLoading(true)
     getPapers(activeProjectId)
       .then(setPapers)
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [activeProjectId])
 
@@ -36,13 +39,21 @@ export default function DashboardPage() {
     for (const file of files) {
       const paper = await uploadPaper(file, userId, activeProjectId)
       setPapers(prev => [paper, ...prev])
-      // Kick off extraction pipeline via API route
       fetch('/api/extract', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ paperId: paper.id })
       })
     }
+  }
+
+  async function handleCreateProject() {
+    if (!newProjectName.trim()) return
+    const project = await createProject(userId, newProjectName.trim(), '', '')
+    setProjects(prev => [project, ...prev])
+    setActiveProjectId(project.id)
+    setNewProjectName('')
+    setShowNewProject(false)
   }
 
   function handleExport() {
@@ -59,9 +70,11 @@ export default function DashboardPage() {
         projects={projects}
         activeProjectId={activeProjectId}
         onSelectProject={setActiveProjectId}
-        onNewProject={() => { /* open create-project modal */ }}
+        onNewProject={() => setShowNewProject(true)}
         papersUsed={usage.used}
         papersLimit={usage.limit}
+        userEmail={user.email}
+        onSignOut={() => supabase.auth.signOut()}
       />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
@@ -93,6 +106,37 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
+
+      {showNewProject && (
+        <div
+          onClick={() => setShowNewProject(false)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(22,25,28,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}
+        >
+          <div onClick={(e) => e.stopPropagation()} style={{ width: 340, background: 'var(--paper)', borderRadius: 'var(--radius)', padding: 22 }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, marginBottom: 14 }}>New project</div>
+            <input
+              autoFocus
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleCreateProject()}
+              placeholder="e.g. BCG Vaccine TB Prevention"
+              style={{ width: '100%', padding: '9px 10px', border: '1px solid var(--line-strong)', borderRadius: 'var(--radius)', fontSize: 13, marginBottom: 14, boxSizing: 'border-box' }}
+            />
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button onClick={() => setShowNewProject(false)} style={{ background: 'none', border: 'none', fontSize: 13, color: 'var(--text-secondary)', padding: '8px 12px' }}>
+                Cancel
+              </button>
+              <button onClick={handleCreateProject} style={{ background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--radius)', fontSize: 13, padding: '8px 14px' }}>
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
+}
+
+export default function DashboardPage() {
+  return <AuthGate>{(user) => <Dashboard user={user} />}</AuthGate>
 }
