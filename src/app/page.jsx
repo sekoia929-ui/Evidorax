@@ -24,14 +24,24 @@ function Dashboard({ user }) {
     checkPaperLimit(userId).then(setUsage).catch(() => {})
   }, [userId])
 
-  useEffect(() => {
-    if (!activeProjectId) return
-    setLoading(true)
-    getPapers(activeProjectId)
-      .then(setPapers)
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [activeProjectId])
+ useEffect(() => {
+  if (!activeProjectId) return
+  setLoading(true)
+  getPapers(activeProjectId)
+    .then(setPapers)
+    .catch(() => {})
+    .finally(() => setLoading(false))
+
+  const interval = setInterval(() => {
+    getPapers(activeProjectId).then((updated) => {
+      setPapers(updated)
+      const stillWorking = updated.some(p => !['complete', 'error'].includes(p.status))
+      if (!stillWorking) clearInterval(interval)
+    }).catch(() => {})
+  }, 4000)
+
+  return () => clearInterval(interval)
+}, [activeProjectId])
 
   const activeProject = projects.find(p => p.id === activeProjectId)
 
