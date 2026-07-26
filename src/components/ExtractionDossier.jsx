@@ -72,10 +72,7 @@ function EvidenceCard({ paper, extraction, verification }) {
       </div>
 
       {/* Expanded evidence */}
-      <pre style={{ fontSize: 10, background: '#f5f5f5', padding: 10, overflow: 'auto', maxHeight: 200 }}>
-  {JSON.stringify({ hasExtraction: !!extraction, extraction }, null, 2)}
-</pre>
-      
+     
       {expanded  && extraction && (
         <div style={{ borderTop: '1px solid var(--line)', padding: '4px 18px 18px' }}>
 
