@@ -19,10 +19,16 @@ export async function uploadPaper(file, userId, projectId) {
   return data
 }
 
+
 export async function getPapers(projectId) {
   const { data, error } = await supabase.from('papers').select(`*, extractions_structured(*), verifications(accuracy_rate, verified_count, total_fields)`).eq('project_id', projectId).order('created_at', { ascending: false })
   if (error) throw error
   return data
+}
+
+export async function deleteProject(projectId) {
+  const { error } = await supabase.from('projects').delete().eq('id', projectId)
+  if (error) throw error
 }
 
 export async function updatePaperStatus(paperId, status, errorMessage = null) {
@@ -34,6 +40,10 @@ export async function getExtraction(paperId) {
   const { data, error } = await supabase.from('extractions_structured').select('*').eq('paper_id', paperId).single()
   if (error) throw error
   return data
+}
+export async function deletePaper(paperId) {
+  const { error } = await supabase.from('papers').delete().eq('id', paperId)
+  if (error) throw error
 }
 
 export async function saveCorrection(paperId, userId, fieldName, originalValue, correctedValue) {
