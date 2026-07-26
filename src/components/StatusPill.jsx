@@ -32,6 +32,30 @@ export default function StatusPill({ status, startedAt }) {
     return () => clearInterval(interval)
   }, [startedAt, pulsing])
 
+  if (status === 'complete') {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11.5, color: 'var(--verified)' }}>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="7" fill="var(--verified)" />
+          <path d="M4 7L6 9L10 4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Complete
+      </div>
+    )
+  }
+
+  if (status === 'error') {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11.5, color: 'var(--contradicted)' }}>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="7" fill="var(--contradicted)" />
+          <path d="M4.5 4.5L9.5 9.5M9.5 4.5L4.5 9.5" stroke="white" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+        Error
+      </div>
+    )
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 110 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11.5, color: s.color }}>
@@ -53,14 +77,8 @@ export default function StatusPill({ status, startedAt }) {
           }
         `}</style>
       </div>
-
       <div style={{ height: 3, background: 'var(--line)', borderRadius: 2, overflow: 'hidden' }}>
-        <div style={{
-          height: '100%',
-          width: `${s.percent}%`,
-          background: s.color,
-          transition: 'width 0.6s ease'
-        }} />
+        <div style={{ height: '100%', width: `${s.percent}%`, background: s.color, transition: 'width 0.6s ease' }} />
       </div>
     </div>
   )
