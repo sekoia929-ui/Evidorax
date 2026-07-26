@@ -2,11 +2,14 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { runFullExtraction } from '@/lib/claude'
 
+export const maxDuration = 60
+
 export async function POST(request) {
   const { paperId } = await request.json()
 
   try {
-    // 1. Fetch paper record and download PDF from storage
+  
+  // 1. Fetch paper record and download PDF from storage
     const { data: paper, error: paperError } = await supabaseAdmin
       .from('papers')
       .select('*')
