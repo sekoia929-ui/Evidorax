@@ -1,5 +1,5 @@
 'use client'
-export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut }) {
+export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, onDeleteProject plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut }) {
   return (
     <aside style={{
       width: 260,
@@ -48,35 +48,48 @@ export default function Sidebar({ projects = [], activeProjectId, onSelectProjec
             No projects yet. Start one to begin extracting.
           </div>
         )}
-
-        {projects.map((p) => {
-          const active = p.id === activeProjectId
-          return (
-            <button
-              key={p.id}
-              onClick={() => onSelectProject(p.id)}
-              style={{
-                display: 'block',
-                width: '100%',
-                textAlign: 'left',
-                padding: '9px 10px',
-                marginBottom: 2,
-                background: active ? 'var(--panel)' : 'transparent',
-                border: 'none',
-                borderLeft: active ? '2px solid var(--ink)' : '2px solid transparent',
-                borderRadius: 0,
-                fontSize: 13.5
-              }}
-            >
-              <div style={{ color: 'var(--text-primary)', fontWeight: active ? 500 : 400 }}>
-                {p.name}
-              </div>
-              <div className="mono" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-                {p.papers?.[0]?.count ?? 0} papers
-              </div>
-            </button>
-          )
-        })}
+{projects.map((p) => {
+  const active = p.id === activeProjectId
+  return (
+    <div
+      key={p.id}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        background: active ? 'var(--panel)' : 'transparent',
+        borderLeft: active ? '2px solid var(--ink)' : '2px solid transparent',
+        marginBottom: 2
+      }}
+    >
+      <button
+        onClick={() => onSelectProject(p.id)}
+        style={{
+          flex: 1,
+          textAlign: 'left',
+          padding: '9px 10px',
+          background: 'none',
+          border: 'none',
+          fontSize: 13.5,
+          minWidth: 0
+        }}
+      >
+        <div style={{ color: 'var(--text-primary)', fontWeight: active ? 500 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {p.name}
+        </div>
+        <div className="mono" style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
+          {p.papers?.[0]?.count ?? 0} papers
+        </div>
+      </button>
+      <button
+        onClick={() => onDeleteProject(p.id)}
+        title="Delete project"
+        style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 12, padding: '9px 10px' }}
+      >
+        ✕
+      </button>
+    </div>
+  )
+})}
       </div>
 
 {userEmail && (
