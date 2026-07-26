@@ -1,5 +1,5 @@
 'use client'
-export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, onDeleteProject plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut }) {
+export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, onDeleteProject, plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut }) {
   return (
     <aside style={{
       width: 260,
