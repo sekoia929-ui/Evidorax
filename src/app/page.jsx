@@ -68,7 +68,7 @@ function Dashboard({ user }) {
 
   function handleExport() {
     const extractions = papers
-      .map(p => p.extractions_structured?.[0])
+      .map(p => p.extractions_structured)
       .filter(Boolean)
     if (extractions.length === 0) return
     exportToExcel(extractions, `${activeProject?.name || 'evidorax'}_extraction.xlsx`)
