@@ -140,8 +140,8 @@ export default function ExtractionDossier({ papers = [] }) {
         <EvidenceCard
           key={paper.id}
           paper={paper}
-          extraction={paper.extractions_structured?.[0]}
-          verification={paper.verifications?.[0]}
+          extraction={paper.extractions_structured}
+          verification={paper.verifications}
         />
       ))}
     </div>
