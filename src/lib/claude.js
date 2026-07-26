@@ -6,6 +6,7 @@ const client = new Anthropic({
 })
 
 const MODEL = 'claude-sonnet-4-6'
+const FAST_MODEL = 'claude-haiku-4-5-20251001'
 const MAX_TOKENS = 8000
 
 // ─────────────────────────────────────────────
@@ -37,7 +38,7 @@ export async function runStage1(pdfText, isScanned = false, imageBase64 = null) 
   }
 
   const response = await client.messages.create({
-    model: MODEL,
+    model: FAST_MODEL,
     max_tokens: MAX_TOKENS,
     messages: [{ role: 'user', content }]
   })
