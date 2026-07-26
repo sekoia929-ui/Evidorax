@@ -97,6 +97,7 @@ async function handleDeleteProject(projectId) {
         papersUsed={usage.used}
         papersLimit={usage.limit}
         userEmail={user.email}
+        onDeleteProject={handleDeleteProject}
         onSignOut={() => supabase.auth.signOut()}
       />
 
@@ -116,7 +117,9 @@ async function handleDeleteProject(projectId) {
               {loading ? (
                 <div style={{ color: 'var(--text-muted)', fontSize: 13, padding: '24px 0' }}>Loading dossier…</div>
               ) : (
-                <ExtractionDossier papers={papers} />
+                <ExtractionDossier papers={papers} 
+                  onDeletePaper={handleDeletePaper}
+                  />
               )}
             </>
           ) : (
