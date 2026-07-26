@@ -6,7 +6,7 @@ import Topbar from '@/components/Topbar'
 import UploadZone from '@/components/UploadZone'
 import ExtractionDossier from '@/components/ExtractionDossier'
 import AuthGate from '@/components/AuthGate'
-import { getProjects, getPapers, uploadPaper, checkPaperLimit, createProject, supabase } from '@/lib/supabase'
+import { getProjects, getPapers, uploadPaper, checkPaperLimit, createProject, deletePaper, deleteProject, supabase } from '@/lib/supabase'
 import { exportToExcel } from '@/lib/export'
 
 function Dashboard({ user }) {
@@ -57,6 +57,19 @@ function Dashboard({ user }) {
     }
   }
 
+async function handleDeletePaper(paperId) {
+  if (!confirm('Delete this paper and its extraction? This cannot be undone.')) return
+  await deletePaper(paperId)
+  setPapers(prev => prev.filter(p => p.id !== paperId))
+}
+
+async function handleDeleteProject(projectId) {
+  if (!confirm('Delete this project and all its papers? This cannot be undone.')) return
+  await deleteProject(projectId)
+  setProjects(prev => prev.filter(p => p.id !== projectId))
+  if (activeProjectId === projectId) setActiveProjectId(null)
+}
+  
   async function handleCreateProject() {
     if (!newProjectName.trim()) return
     const project = await createProject(userId, newProjectName.trim(), '', '')
