@@ -65,7 +65,14 @@ function EvidenceCard({ paper, extraction, verification }) {
               compact
             />
           )}
-          <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>
+         <button
+  onClick={(e) => { e.stopPropagation(); onDelete(paper.id) }}
+  title="Delete paper"
+  style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 13, padding: '2px 4px' }}
+>
+  ✕
+</button> 
+         <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>
             {expanded ? '\u2212' : '+'}
           </span>
         </div>
