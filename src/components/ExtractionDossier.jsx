@@ -46,7 +46,7 @@ function EvidenceCard({ paper, extraction, verification, OnDelete }) {
         </div>
 
        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-  <StatusPill status={paper.status} />
+  <StatusPill status={paper.status} startedAt={paper.created_at} />
   {paper.status === 'error' && paper.error_message && (
     <span
       title={paper.error_message}
