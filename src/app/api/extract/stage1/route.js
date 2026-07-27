@@ -24,11 +24,16 @@ export async function POST(request) {
 
     if (downloadError) throw downloadError
 
-    const pdfText = await extractTextFromPdf(fileData)
+    let pdfText = await extractTextFromPdf(fileData)
 
-    await supabaseAdmin.from('papers').update({ status: 'extracting' }).eq('id', paperId)
+const MAX_CHARS = 15000
+if (pdfText.length > MAX_CHARS) {
+  pdfText = pdfText.slice(0, MAX_CHARS) + '\n\n[TEXT TRUNCATED — paper exceeds processing limit, later sections omitted]'
+}
 
-    const stage1Output = await runStage1(pdfText)
+await supabaseAdmin.from('papers').update({ status: 'extracting' }).eq('id', paperId)
+
+const stage1Output = await runStage1(pdfText)
 
     await supabaseAdmin.from('extractions_raw').upsert({
       paper_id: paperId,
