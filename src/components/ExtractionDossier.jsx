@@ -9,7 +9,7 @@ import FieldRow from './FieldRow'
 // PICO / Raw Data / GRADE sections. This is the primary reading
 // surface — modelled on a lab dossier, not a spreadsheet.
 
-function EvidenceCard({ paper, extraction, verification, OnDelete }) {
+function EvidenceCard({ paper, extraction, verification, onDelete }) {
   const [expanded, setExpanded] = useState(false)
 
   const fv = verification?.field_verification || {}
@@ -126,7 +126,7 @@ function SectionLabel({ children, top }) {
   )
 }
 
-export default function ExtractionDossier({ papers = [], OnDeletePaper }) {
+export default function ExtractionDossier({ papers = [], onDeletePaper }) {
   if (papers.length === 0) {
     return (
       <div style={{ padding: '48px 0', textAlign: 'center', color: 'var(--text-muted)' }}>
@@ -146,7 +146,7 @@ export default function ExtractionDossier({ papers = [], OnDeletePaper }) {
           paper={paper}
           extraction={paper.extractions_structured}
           verification={paper.verifications}
-          OnDelete={OnDeletePaper}
+          onDelete={onDeletePaper}
           />
       ))}
     </div>
