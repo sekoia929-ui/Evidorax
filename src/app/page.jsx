@@ -46,7 +46,7 @@ function Dashboard({ user }) {
   const activeProject = projects.find(p => p.id === activeProjectId)
 
   async function runExtractionPipeline(paperId) {
-  const stages = ['stage1', 'stage2', 'stage3']
+  const stages = ['parse', 'stage1', 'stage2', 'stage3']
   for (const stage of stages) {
     const res = await fetch(`/api/extract/${stage}`, {
       method: 'POST',
