@@ -6,44 +6,34 @@ export const maxDuration = 60
 
 export async function POST(request) {
   const { paperId } = await request.json()
+  const t0 = Date.now()
 
   try {
-    const { data: paper, error: paperError } = await supabaseAdmin
-      .from('papers')
-      .select('*')
-      .eq('id', paperId)
+    const { data: raw, error: rawError } = await supabaseAdmin
+      .from('extractions_raw')
+      .select('raw_text')
+      .eq('paper_id', paperId)
       .single()
 
-    if (paperError) throw paperError
+    if (rawError) throw rawError
+    if (!raw?.raw_text) throw new Error('Parsed text missing — run /parse first')
 
-    await supabaseAdmin.from('papers').update({ status: 'parsing' }).eq('id', paperId)
+    await supabaseAdmin.from('papers').update({ status: 'extracting' }).eq('id', paperId)
 
-    const { data: fileData, error: downloadError } = await supabaseAdmin.storage
-      .from('papers')
-      .download(paper.storage_path)
+    console.log(`[stage1] starting Haiku call: ${Date.now() - t0}ms, input chars=${raw.raw_text.length}`)
 
-    if (downloadError) throw downloadError
+    const stage1Output = await runStage1(raw.raw_text)
 
-    let pdfText = await extractTextFromPdf(fileData)
+    console.log(`[stage1] Haiku call finished: ${Date.now() - t0}ms`)
 
-const MAX_CHARS = 15000
-if (pdfText.length > MAX_CHARS) {
-  pdfText = pdfText.slice(0, MAX_CHARS) + '\n\n[TEXT TRUNCATED — paper exceeds processing limit, later sections omitted]'
-}
+    await supabaseAdmin.from('extractions_raw').update({ stage1_output: stage1Output }).eq('paper_id', paperId)
 
-await supabaseAdmin.from('papers').update({ status: 'extracting' }).eq('id', paperId)
-
-const stage1Output = await runStage1(pdfText)
-
-    await supabaseAdmin.from('extractions_raw').upsert({
-      paper_id: paperId,
-      raw_text: pdfText,
-      stage1_output: stage1Output
-    })
+    console.log(`[stage1] saved output: ${Date.now() - t0}ms`)
 
     return NextResponse.json({ success: true, paperId })
 
   } catch (error) {
+    console.log(`[stage1] FAILED at ${Date.now() - t0}ms: ${error.message}`)
     await supabaseAdmin.from('papers').update({
       status: 'error',
       error_message: `Stage 1 failed: ${error.message}`
@@ -51,11 +41,4 @@ const stage1Output = await runStage1(pdfText)
 
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
-}
-
-async function extractTextFromPdf(fileBlob) {
-  const pdfParse = (await import('pdf-parse/lib/pdf-parse.js')).default
-  const buffer = Buffer.from(await fileBlob.arrayBuffer())
-  const data = await pdfParse(buffer)
-  return data.text
 }
