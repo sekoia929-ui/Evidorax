@@ -45,17 +45,26 @@ function Dashboard({ user }) {
 
   const activeProject = projects.find(p => p.id === activeProjectId)
 
-  async function handleFilesSelected(files) {
-    for (const file of files) {
-      const paper = await uploadPaper(file, userId, activeProjectId)
-      setPapers(prev => [paper, ...prev])
-      fetch('/api/extract', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paperId: paper.id })
-      })
-    }
+  async function runExtractionPipeline(paperId) {
+  const stages = ['stage1', 'stage2', 'stage3']
+  for (const stage of stages) {
+    const res = await fetch(`/api/extract/${stage}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paperId })
+    })
+    const result = await res.json()
+    if (!result.success) return // status already set to 'error' server-side
   }
+}
+
+async function handleFilesSelected(files) {
+  for (const file of files) {
+    const paper = await uploadPaper(file, userId, activeProjectId)
+    setPapers(prev => [paper, ...prev])
+    runExtractionPipeline(paper.id) // fire and forget — polling picks up status changes
+  }
+}
 
 async function handleDeletePaper(paperId) {
   if (!confirm('Delete this paper and its extraction? This cannot be undone.')) return
