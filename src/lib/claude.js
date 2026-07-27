@@ -82,7 +82,7 @@ export async function runPass3(stage1Output, structuredJSON) {
   const prompt = PASS3_PROMPT(stage1Output, structuredJSON)
 
   const response = await client.messages.create({
-    model: MODEL,
+    model: FAST_MODEL,
     max_tokens: MAX_TOKENS,
     messages: [{ role: 'user', content: prompt }]
   })
