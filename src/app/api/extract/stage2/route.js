@@ -37,7 +37,6 @@ export async function POST(request) {
   // ────────────────────────────────────────────────
 
   try {
-    // ...rest of the existing route logic continues here unchanged
     const { data: raw, error: rawError } = await supabaseAdmin
       .from('extractions_raw')
       .select('stage1_output')
@@ -47,12 +46,14 @@ export async function POST(request) {
     if (rawError) throw rawError
     if (!raw?.stage1_output) throw new Error('Stage 1 output missing — cannot run Stage 2')
 
+    console.log(`[stage2] starting Sonnet call: ${Date.now() - t0}ms`)
+
     const d = await runStage2(raw.stage1_output)
 
-    // Save the full nested JSON for Stage 3 to read later
+    console.log(`[stage2] Sonnet call finished: ${Date.now() - t0}ms`)
+
     await supabaseAdmin.from('extractions_raw').update({ stage2_json: d }).eq('paper_id', paperId)
 
-    // Flatten into the structured table for the UI
     await supabaseAdmin.from('extractions_structured').upsert({
       paper_id: paperId,
       title: d.study_info?.title,
@@ -117,6 +118,7 @@ export async function POST(request) {
     return NextResponse.json({ success: true, paperId })
 
   } catch (error) {
+    console.log(`[stage2] FAILED at ${Date.now() - t0}ms: ${error.message}`)
     await supabaseAdmin.from('papers').update({
       status: 'error',
       error_message: `Stage 2 failed: ${error.message}`
