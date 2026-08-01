@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { createClient } from '@supabase/supabase-js'
-import { runStage3 } from '@/lib/claude'
+import { runPass3 } from '@/lib/claude'
 
 export const maxDuration = 60
 
