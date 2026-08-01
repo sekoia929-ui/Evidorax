@@ -39,7 +39,7 @@ export async function runStage1(pdfText, isScanned = false, imageBase64 = null) 
 
   const response = await client.messages.create({
     model: FAST_MODEL,
-    max_tokens: MAX_TOKENS,
+    max_tokens: 3000,
     messages: [{ role: 'user', content }]
   })
 
