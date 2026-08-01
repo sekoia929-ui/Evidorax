@@ -34,7 +34,7 @@ export async function POST(request) {
 
     console.log(`[parse] pdf-parse finished: ${Date.now() - t0}ms, chars=${pdfText.length}`)
 
-    const MAX_CHARS = 15000
+    const MAX_CHARS = 10000
     if (pdfText.length > MAX_CHARS) {
       pdfText = pdfText.slice(0, MAX_CHARS) + '\n\n[TEXT TRUNCATED — paper exceeds processing limit, later sections omitted]'
     }
