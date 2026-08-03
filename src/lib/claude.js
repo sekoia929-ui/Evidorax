@@ -9,6 +9,26 @@ const MODEL = 'claude-sonnet-4-6'
 const FAST_MODEL = 'claude-haiku-4-5-20251001'
 const MAX_TOKENS = 8000
 
+// Claude sometimes appends stray text after the JSON object despite
+// instructions to return only JSON. Instead of trusting the whole
+// response is clean JSON, extract just the first complete {...} block.
+function extractJsonObject(text) {
+  const start = text.indexOf('{')
+  if (start === -1) throw new Error('No JSON object found in response')
+
+  let depth = 0
+  for (let i = start; i < text.length; i++) {
+    if (text[i] === '{') depth++
+    if (text[i] === '}') depth--
+    if (depth === 0) {
+      return text.slice(start, i + 1)
+    }
+  }
+  throw new Error('Unterminated JSON object in response')
+}
+
+
+
 // ─────────────────────────────────────────────
 // STAGE 1: Giant Extractor
 // Takes raw PDF text, dumps everything
@@ -52,26 +72,9 @@ export async function runStage1(pdfText, isScanned = false, imageBase64 = null) 
 // ─────────────────────────────────────────────
 export async function runStage2(stage1Output) {
   const prompt = STAGE2_PROMPT(stage1Output)
-
-  const response = await client.messages.create({
-    model: MODEL,
-    max_tokens: MAX_TOKENS,
-    messages: [{ role: 'user', content: prompt }]
-  })
-
+  const response = await client.messages.create({ model: MODEL, max_tokens: MAX_TOKENS, messages: [{ role: 'user', content: prompt }] })
   const text = response.content[0].text
-
-  // Clean JSON fences if present
-  const cleaned = text
-    .replace(/```json\n?/g, '')
-    .replace(/```\n?/g, '')
-    .trim()
-
-  try {
-    return JSON.parse(cleaned)
-  } catch (e) {
-    throw new Error(`Stage 2 JSON parse failed: ${e.message}\nRaw output: ${text.slice(0, 500)}`)
-  }
+  try { return JSON.parse(extractJsonObject(text)) } catch (e) { throw new Error(`Stage 2 JSON parse failed: ${e.message}`) }
 }
 
 // ─────────────────────────────────────────────
@@ -80,27 +83,10 @@ export async function runStage2(stage1Output) {
 // ─────────────────────────────────────────────
 export async function runPass3(stage1Output, structuredJSON) {
   const prompt = PASS3_PROMPT(stage1Output, structuredJSON)
-
-  const response = await client.messages.create({
-    model: FAST_MODEL,
-    max_tokens: MAX_TOKENS,
-    messages: [{ role: 'user', content: prompt }]
-  })
-
+  const response = await client.messages.create({ model: FAST_MODEL, max_tokens: MAX_TOKENS, messages: [{ role: 'user', content: prompt }] })
   const text = response.content[0].text
-
-  const cleaned = text
-    .replace(/```json\n?/g, '')
-    .replace(/```\n?/g, '')
-    .trim()
-
-  try {
-    return JSON.parse(cleaned)
-  } catch (e) {
-    throw new Error(`Pass 3 JSON parse failed: ${e.message}`)
-  }
+  try { return JSON.parse(extractJsonObject(text)) } catch (e) { throw new Error(`Pass 3 JSON parse failed: ${e.message}`) }
 }
-
 // ─────────────────────────────────────────────
 // Full pipeline — runs all 3 in sequence
 // ─────────────────────────────────────────────
