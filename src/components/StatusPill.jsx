@@ -11,6 +11,11 @@ const STAGES = {
   error:      { label: 'Error',       color: 'var(--contradicted)', percent: 100 }
 }
 
+// Four stages, each capped at 60s server-side, plus real-world overhead.
+// Past this, a paper is almost certainly dead (Vercel killed the function
+// mid-run with no chance for our code to mark it 'error'), not just slow.
+const STALE_THRESHOLD_SECONDS = 270 // 4.5 minutes
+
 function formatElapsed(seconds) {
   if (seconds < 60) return `${seconds}s`
   const m = Math.floor(seconds / 60)
@@ -18,7 +23,7 @@ function formatElapsed(seconds) {
   return `${m}m ${s}s`
 }
 
-export default function StatusPill({ status, startedAt }) {
+export default function StatusPill({ status, startedAt, onRetry }) {
   const s = STAGES[status] || STAGES.uploaded
   const pulsing = ['parsing', 'extracting', 'verifying'].includes(status)
   const [elapsed, setElapsed] = useState(0)
@@ -31,6 +36,8 @@ export default function StatusPill({ status, startedAt }) {
     const interval = setInterval(tick, 1000)
     return () => clearInterval(interval)
   }, [startedAt, pulsing])
+
+  const isStale = pulsing && elapsed > STALE_THRESHOLD_SECONDS
 
   if (status === 'complete') {
     return (
@@ -52,6 +59,32 @@ export default function StatusPill({ status, startedAt }) {
           <path d="M4.5 4.5L9.5 9.5M9.5 4.5L4.5 9.5" stroke="white" strokeWidth="1.4" strokeLinecap="round" />
         </svg>
         Error
+      </div>
+    )
+  }
+
+  if (isStale) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11.5, color: 'var(--contradicted)' }}>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="7" fill="var(--contradicted)" />
+          <path d="M7 3.5V7.5M7 10V10.2" stroke="white" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+        <span>Possibly stalled</span>
+        <span className="mono" style={{ fontSize: 10.5, color: 'var(--text-muted)' }}>
+          {formatElapsed(elapsed)}
+        </span>
+        {onRetry && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onRetry() }}
+            style={{
+              background: 'none', border: '1px solid var(--contradicted)', color: 'var(--contradicted)',
+              borderRadius: 2, fontSize: 10.5, padding: '1px 6px', cursor: 'pointer'
+            }}
+          >
+            Retry
+          </button>
+        )}
       </div>
     )
   }
