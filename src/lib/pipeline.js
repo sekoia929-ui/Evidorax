@@ -23,7 +23,7 @@ export async function parsePaper(paperId) {
 
   let pdfText = await extractTextFromPdf(fileData)
 
-  const MAX_CHARS = 10000
+  const MAX_CHARS = 30000
   const wasTruncated = pdfText.length > MAX_CHARS
   if (wasTruncated) {
     pdfText = pdfText.slice(0, MAX_CHARS) + '\n\n[TEXT TRUNCATED — paper exceeds processing limit, later sections omitted]'
