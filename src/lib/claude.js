@@ -60,6 +60,7 @@ export async function runStage1(pdfText, isScanned = false, imageBase64 = null) 
   const response = await client.messages.create({
     model: FAST_MODEL,
     max_tokens: 3000,
+    temperature: 0,
     messages: [{ role: 'user', content }]
   })
 
@@ -72,7 +73,7 @@ export async function runStage1(pdfText, isScanned = false, imageBase64 = null) 
 // ─────────────────────────────────────────────
 export async function runStage2(stage1Output) {
   const prompt = STAGE2_PROMPT(stage1Output)
-  const response = await client.messages.create({ model: MODEL, max_tokens: MAX_TOKENS, messages: [{ role: 'user', content: prompt }] })
+  const response = await client.messages.create({ model: MODEL, max_tokens: MAX_TOKENS, temperature: 0, messages: [{ role: 'user', content: prompt }] })
   const text = response.content[0].text
   try { return JSON.parse(extractJsonObject(text)) } catch (e) { throw new Error(`Stage 2 JSON parse failed: ${e.message}`) }
 }
@@ -83,7 +84,7 @@ export async function runStage2(stage1Output) {
 // ─────────────────────────────────────────────
 export async function runPass3(stage1Output, structuredJSON) {
   const prompt = PASS3_PROMPT(stage1Output, structuredJSON)
-  const response = await client.messages.create({ model: FAST_MODEL, max_tokens: MAX_TOKENS, messages: [{ role: 'user', content: prompt }] })
+  const response = await client.messages.create({ model: FAST_MODEL, max_tokens: MAX_TOKENS, temperature: 0, messages: [{ role: 'user', content: prompt }] })
   const text = response.content[0].text
   try { return JSON.parse(extractJsonObject(text)) } catch (e) { throw new Error(`Pass 3 JSON parse failed: ${e.message}`) }
 }
