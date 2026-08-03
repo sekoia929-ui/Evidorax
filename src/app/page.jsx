@@ -45,23 +45,18 @@ function Dashboard({ user }) {
 
   const activeProject = projects.find(p => p.id === activeProjectId)
 
-  async function runExtractionPipeline(paperId) {
-  const stages = ['parse', 'stage1', 'stage2', 'stage3']
-  for (const stage of stages) {
-   const { data: { session } } = await supabase.auth.getSession()
-const res = await fetch(`/api/extract/${stage}`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${session.access_token}`
-  },
-  body: JSON.stringify({ paperId })
-})
-    const result = await res.json()
-    if (!result.success) return // status already set to 'error' server-side
-  }
+async function runExtractionPipeline(paperId) {
+  const { data: { session } } = await supabase.auth.getSession()
+  await fetch('/api/extract/trigger', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({ paperId })
+  })
+  // Inngest now owns the pipeline — polling picks up status changes as usual
 }
-
 async function handleFilesSelected(files) {
   for (const file of files) {
     const paper = await uploadPaper(file, userId, activeProjectId)
