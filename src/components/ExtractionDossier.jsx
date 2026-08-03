@@ -46,7 +46,12 @@ function EvidenceCard({ paper, extraction, verification, onDelete }) {
         </div>
 
        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-  <StatusPill status={paper.status} startedAt={paper.created_at} />
+  <StatusPill status={paper.status} startedAt={paper.created_at} onRetry={() => onRetryPaper(paper.id)} />
+{paper.text_truncated && (
+  <WarningBadge tooltip="This paper was long — only the first ~10,000 characters were analyzed. Later sections may be missing from the extraction.">
+    Truncated
+  </WarningBadge>
+)}
   {paper.status === 'error' && paper.error_message && (
     <span
       title={paper.error_message}
