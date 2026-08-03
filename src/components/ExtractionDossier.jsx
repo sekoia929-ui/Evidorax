@@ -4,12 +4,12 @@ import { useState } from 'react'
 import VerificationLedger from './VerificationLedger'
 import StatusPill from './StatusPill'
 import FieldRow from './FieldRow'
-
+import WarningBadge from './WarningBadge'
 // One paper's evidence card, collapsed by default, expands into
 // PICO / Raw Data / GRADE sections. This is the primary reading
 // surface — modelled on a lab dossier, not a spreadsheet.
 
-function EvidenceCard({ paper, extraction, verification, onDelete }) {
+function EvidenceCard({ paper, extraction, verification, onDelete, onRetryPaper }) {
   const [expanded, setExpanded] = useState(false)
 
   const fv = verification?.field_verification || {}
@@ -131,7 +131,7 @@ function SectionLabel({ children, top }) {
   )
 }
 
-export default function ExtractionDossier({ papers = [], onDeletePaper }) {
+export default function ExtractionDossier({ papers = [], onDeletePaper, onRetryPaper }) {
   if (papers.length === 0) {
     return (
       <div style={{ padding: '48px 0', textAlign: 'center', color: 'var(--text-muted)' }}>
@@ -152,6 +152,7 @@ export default function ExtractionDossier({ papers = [], onDeletePaper }) {
           extraction={paper.extractions_structured}
           verification={paper.verifications}
           onDelete={onDeletePaper}
+          onRetryPaper={onRetryPaper}
           />
       ))}
     </div>
