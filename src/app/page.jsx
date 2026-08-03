@@ -6,7 +6,7 @@ import Topbar from '@/components/Topbar'
 import UploadZone from '@/components/UploadZone'
 import ExtractionDossier from '@/components/ExtractionDossier'
 import AuthGate from '@/components/AuthGate'
-import { getProjects, getPapers, uploadPaper, checkPaperLimit, createProject, deletePaper, deleteProject, supabase } from '@/lib/supabase'
+import { getProjects, getPapers, uploadPaper, checkPaperLimit, createProject, deletePaper, deleteProject, updatePaperStatus, supabase } from '@/lib/supabase'
 import { exportToExcel } from '@/lib/export'
 
 function Dashboard({ user }) {
@@ -76,6 +76,11 @@ async function handleDeletePaper(paperId) {
   setPapers(prev => prev.filter(p => p.id !== paperId))
 }
 
+async function handleRetryPaper(paperId) {
+  await updatePaperStatus(paperId, 'uploaded')
+  runExtractionPipeline(paperId)
+}
+  
 async function handleDeleteProject(projectId) {
   if (!confirm('Delete this project and all its papers? This cannot be undone.')) return
   await deleteProject(projectId)
@@ -132,6 +137,7 @@ async function handleDeleteProject(projectId) {
               ) : (
                 <ExtractionDossier papers={papers} 
                   onDeletePaper={handleDeletePaper}
+                  onRetryPaper={handleRetryPaper}
                   />
               )}
             </>
