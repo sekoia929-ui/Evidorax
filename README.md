@@ -59,7 +59,6 @@ Human reviews only the flagged fields
 Export to Excel (3 sheets) or CSV
 ```
 
-Three Claude API calls per paper. Roughly $0.15–$0.35 in API cost per paper at current pricing.
 
 ---
 
