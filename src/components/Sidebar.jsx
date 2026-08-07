@@ -1,6 +1,7 @@
 
 'use client'
 import ThemeToggle from './ThemeToggle'
+import Logo from './Logo'
 export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, onDeleteProject, plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut }) {
   return (
     <aside style={{
@@ -14,15 +15,16 @@ export default function Sidebar({ projects = [], activeProjectId, onSelectProjec
     }}>
       {/* Wordmark */}
       <div style={{ padding: '22px 20px 18px', borderBottom: '1px solid var(--line)' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: 19, fontWeight: 600 }}>
-            Evidora<span style={{ color: 'var(--verified)' }}>X</span>
-          </span>
-        </div>
-        <div className="mono" style={{ fontSize: 10.5, color: 'var(--text-muted)', marginTop: 3, letterSpacing: '0.04em' }}>
-          EVIDENCE EXTRACTION
-        </div>
-      </div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+    <Logo size={26} />
+    <span style={{ fontFamily: 'var(--font-display)', fontSize: 19, fontWeight: 600 }}>
+      Evidora<span style={{ color: 'var(--verified)' }}>X</span>
+    </span>
+  </div>
+  <div className="mono" style={{ fontSize: 10.5, color: 'var(--text-muted)', marginTop: 3, letterSpacing: '0.04em' }}>
+    EVIDENCE EXTRACTION
+  </div>
+</div>
 
       {/* Case files */}
       <div style={{ padding: '16px 12px', flex: 1, overflowY: 'auto' }}>
