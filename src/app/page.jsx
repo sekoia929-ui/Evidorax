@@ -9,14 +9,13 @@ const dark = {
 export default function LandingPage() {
   return (
     <div style={{ background: dark.bg, color: dark.text, minHeight: '100vh', fontFamily: 'var(--font-sans)' }}>
+    
       {/* Nav */}
       <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 40px', borderBottom: `1px solid ${dark.line}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-         <Logo />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-  <Logo size={24} />
-  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}>EvidoraX</span>
-         </div>
+          <Logo />
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: 19, fontWeight: 600 }}>EvidoraX</span>
+        </div>
         <div style={{ display: 'flex', gap: 32, fontSize: 14, color: dark.muted }}>
           <a href="#features" style={{ color: 'inherit' }}>Features</a>
           <a href="#pricing" style={{ color: 'inherit' }}>Pricing</a>
