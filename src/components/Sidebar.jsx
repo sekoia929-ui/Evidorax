@@ -40,6 +40,7 @@ export default function Sidebar({ projects = [], activeProjectId, onSelectProjec
             aria-label="New project"
           >
             +
+            <ThemeToggle />
           </button>
         </div>
 
