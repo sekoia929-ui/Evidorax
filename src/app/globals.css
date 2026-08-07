@@ -70,3 +70,28 @@ button {
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
+[data-theme="dark"] {
+  --ink:        #F2F1EC;
+  --paper:      #16181C;
+  --panel:      #1C1F24;
+  --panel-2:    #22262C;
+  --line:       #2A2E35;
+  --line-strong:#3A3F47;
+
+  --text-primary:   #F2F1EC;
+  --text-secondary: #A8ACB3;
+  --text-muted:     #6E7379;
+
+  --verified:      #34D3A8;
+  --verified-bg:    #14332A;
+  --review:         #E0A94D;
+  --review-bg:      #332C16;
+  --contradicted:   #E0685A;
+  --contradicted-bg:#331D19;
+  --notfound:       #6E7379;
+  --notfound-bg:    #22262C;
+}
+
+[data-theme="dark"] body {
+  background: var(--panel);
+}
