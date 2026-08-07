@@ -59,9 +59,16 @@ async function runExtractionPipeline(paperId) {
 }
 async function handleFilesSelected(files) {
   for (const file of files) {
-    const paper = await uploadPaper(file, userId, activeProjectId)
-    setPapers(prev => [paper, ...prev])
-    runExtractionPipeline(paper.id) // fire and forget — polling picks up status changes
+    try {
+      const paper = await uploadPaper(file, userId, activeProjectId)
+      setPapers(prev => [paper, ...prev])
+      runExtractionPipeline(paper.id)
+    } catch (err) {
+      alert(err.message?.includes('Paper limit reached')
+        ? "You've reached your free plan limit. Upgrade to continue extracting."
+        : 'Upload failed: ' + err.message)
+      break
+    }
   }
 }
 
