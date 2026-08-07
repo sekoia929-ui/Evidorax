@@ -1,4 +1,6 @@
+
 'use client'
+import ThemeToggle from './ThemeToggle'
 export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, onDeleteProject, plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut }) {
   return (
     <aside style={{
