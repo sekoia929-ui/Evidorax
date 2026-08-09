@@ -8,6 +8,7 @@ import ExtractionDossier from '@/components/ExtractionDossier'
 import AuthGate from '@/components/AuthGate'
 import { getProjects, getPapers, uploadPaper, checkPaperLimit, createProject, deletePaper, deleteProject, updatePaperStatus, supabase } from '@/lib/supabase'
 import { exportToExcel } from '@/lib/export'
+import { requestAccountDeletion } from '@/lib/supabase'
 
 function Dashboard({ user }) {
   const userId = user.id
@@ -118,6 +119,22 @@ async function handleDeleteProject(projectId) {
     exportToExcel(extractions, `${activeProject?.name || 'evidorax'}_extraction.xlsx`)
   }
 
+  async function handleRequestDeletion() {
+  const confirmed = confirm(
+    "This will submit a request to permanently delete your account and all your data. We'll process this within 7 days and email you to confirm. Continue?"
+  )
+  if (!confirmed) return
+
+  try {
+    await requestAccountDeletion(userId, user.email)
+    alert("Request submitted. We'll delete your account and data within 7 days and confirm by email.")
+  } catch (err) {
+    alert('Something went wrong: ' + err.message)
+  }
+}
+  
+  
+  
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <Sidebar
