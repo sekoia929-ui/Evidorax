@@ -29,25 +29,59 @@ export default function LandingPage() {
         </div>
       </nav>
 
+    
       {/* Hero */}
-      <section style={{ padding: '90px 40px 60px', maxWidth: 900 }}>
-        <div style={{ display: 'inline-block', border: `1px solid ${dark.line}`, borderRadius: 20, padding: '6px 14px', fontSize: 11.5, color: dark.muted, marginBottom: 24 }}>
-          ● RESEARCH EXTRACTION TOOL
-        </div>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 56, lineHeight: 1.1, marginBottom: 24 }}>
-          Turn research PDFs into <em style={{ fontStyle: 'italic' }}>structured evidence</em>
-        </h1>
-        <p style={{ fontSize: 17, color: dark.muted, lineHeight: 1.7, marginBottom: 36, maxWidth: 680 }}>
-          EvidoraX extracts structured study data from research literature — authors, design, population, intervention, comparator, outcomes — and organises it into editable, review-ready records. Built for systematic reviewers, clinicians, and research analysts.
-        </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20 }}>
-          <Link href="/dashboard" style={{ background: dark.accent, color: '#08110E', padding: '12px 22px', borderRadius: 6, fontSize: 14.5, fontWeight: 500 }}>
-            Start extracting →
-          </Link>
-          <a href="#how" style={{ color: dark.muted, fontSize: 14.5 }}>See how it works ›</a>
-        </div>
-        <p style={{ color: '#5B5F66', fontSize: 13 }}>Designed for researchers who care about accuracy and reproducibility.</p>
-      </section>
+<section style={{ position: 'relative', overflow: 'hidden' }}>
+  {/* Drifting dot grid background */}
+  <div style={{
+    position: 'absolute', inset: 0,
+    backgroundImage: 'radial-gradient(circle, #2A2E35 1px, transparent 1px)',
+    backgroundSize: '26px 26px',
+    animation: 'evx-drift 70s linear infinite',
+    opacity: 0.5,
+    zIndex: 0
+  }} />
+
+  {/* Soft teal glow */}
+  <div style={{
+    position: 'absolute', top: '-15%', left: '20%', width: 640, height: 640,
+    background: 'radial-gradient(circle, rgba(45,212,168,0.12), transparent 70%)',
+    filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0
+  }} />
+
+  {/* Fade to background at the bottom so it blends into the next section */}
+  <div style={{
+    position: 'absolute', bottom: 0, left: 0, width: '100%', height: '140px',
+    background: `linear-gradient(180deg, transparent, ${dark.bg})`,
+    zIndex: 1
+  }} />
+
+  <div style={{ position: 'relative', zIndex: 2, padding: '90px 40px 60px', maxWidth: 900 }}>
+    <div style={{ display: 'inline-block', border: `1px solid ${dark.line}`, borderRadius: 20, padding: '6px 14px', fontSize: 11.5, color: dark.muted, marginBottom: 24 }}>
+      ● RESEARCH EXTRACTION TOOL
+    </div>
+    <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 56, lineHeight: 1.1, marginBottom: 24 }}>
+      Turn research PDFs into <em style={{ fontStyle: 'italic' }}>structured evidence</em>
+    </h1>
+    <p style={{ fontSize: 17, color: dark.muted, lineHeight: 1.7, marginBottom: 36, maxWidth: 680 }}>
+      EvidoraX extracts structured study data from research literature — authors, design, population, intervention, comparator, outcomes — and organises it into editable, review-ready records. Built for systematic reviewers, clinicians, and research analysts.
+    </p>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20 }}>
+      <Link href="/dashboard" style={{ background: dark.accent, color: '#08110E', padding: '12px 22px', borderRadius: 6, fontSize: 14.5, fontWeight: 500 }}>
+        Start extracting →
+      </Link>
+      <a href="#how" style={{ color: dark.muted, fontSize: 14.5 }}>See how it works ›</a>
+    </div>
+    <p style={{ color: '#5B5F66', fontSize: 13 }}>Designed for researchers who care about accuracy and reproducibility.</p>
+  </div>
+
+  <style>{`
+    @keyframes evx-drift {
+      from { background-position: 0 0; }
+      to { background-position: 260px 260px; }
+    }
+  `}</style>
+</section>
 
       {/* How it works */}
       <section id="how" style={{ padding: '0 40px 80px' }}>
