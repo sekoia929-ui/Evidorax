@@ -1,0 +1,19 @@
+# EvidoraX
+
+> AI-powered evidence extraction tool that converts research paper PDFs into structured PICO and GRADE data tables, with every field cited to its exact source sentence.
+
+## What it does
+EvidoraX helps researchers, clinicians, and systematic reviewers extract:
+- Population, Intervention, Comparator, Outcome (PICO) elements
+- GRADE certainty ratings (risk of bias, inconsistency, indirectness, imprecision, publication bias)
+- Raw effect sizes, confidence intervals, and sample sizes
+
+from clinical trial and research PDFs, using a three-pass AI pipeline that verifies every extracted field against the original source text.
+
+## Who it's for
+Systematic review teams, guideline committees, clinicians, and research analysts who need to extract structured evidence data from primary literature without manual data entry.
+
+## Key pages
+- Homepage: https://your-domain.vercel.app/
+- Blog: https://your-domain.vercel.app/blog
+- Pricing: https://your-domain.vercel.app/#pricing
