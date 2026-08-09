@@ -105,9 +105,16 @@ export default function Sidebar({ projects = [], activeProjectId, onSelectProjec
           <button onClick={onSignOut} style={{ background: 'none', border: 'none', fontSize: 11, color: 'var(--text-secondary)', textDecoration: 'underline' }}>
             Sign out
           </button>
+        <button
+  onClick={onRequestDeletion}
+  style={{ background: 'none', border: 'none', fontSize: 10.5, color: 'var(--text-muted)', padding: '8px 20px', textAlign: 'left', width: '100%' }}
+>
+  Delete my account
+</button>
         </div>
       )}
-      
+
+
       {/* Usage strip */}
       <div style={{ padding: '14px 20px', borderTop: '1px solid var(--line)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
