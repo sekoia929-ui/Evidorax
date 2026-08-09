@@ -148,6 +148,7 @@ async function handleDeleteProject(projectId) {
         onDeleteProject={handleDeleteProject}
         onSignOut={() => supabase.auth.signOut()}
         onUpgrade={handleUpgrade}
+        onRequestDeletion={handleRequestDeletion}
         />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <Topbar
