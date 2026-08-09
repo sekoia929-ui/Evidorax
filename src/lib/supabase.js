@@ -75,3 +75,11 @@ export async function checkPaperLimit(userId) {
   const profile = await getProfile(userId)
   return { used: profile.papers_used, limit: profile.papers_limit, remaining: profile.papers_limit - profile.papers_used, canUpload: profile.papers_used < profile.papers_limit || profile.plan !== 'free' }
 }
+
+export async function requestAccountDeletion(userId, userEmail) {
+  const { error } = await supabase.from('deletion_requests').insert({
+    user_id: userId,
+    user_email: userEmail
+  })
+  if (error) throw error
+}
