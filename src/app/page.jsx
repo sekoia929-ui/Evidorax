@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Logo from '@/components/Logo'
-
+import CitationFlowBackground from '@/components/CitationFlowBackground'
 const dark = {
   bg: '#0D0F12', panel: '#16181C', line: '#25282E',
   text: '#F2F1EC', muted: '#9296A0', accent: '#2DD4A8'
