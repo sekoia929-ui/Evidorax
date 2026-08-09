@@ -126,6 +126,18 @@ export default function Sidebar({ projects = [], activeProjectId, onSelectProjec
           </div>
         )}
       </div>
+    {plan === 'free' && (
+  <button
+    onClick={onUpgrade}
+    style={{
+      width: '100%', marginTop: 10, background: 'var(--ink)', color: 'var(--paper)',
+      border: 'none', borderRadius: 'var(--radius)', padding: '8px', fontSize: 12, fontWeight: 500
+    }}
+  >
+    Get 10 more for $4.99
+  </button>
+)}
+    
     </aside>
   )
 }
