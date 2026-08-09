@@ -78,7 +78,18 @@ async function handleDeletePaper(paperId) {
   setPapers(prev => prev.filter(p => p.id !== paperId))
 }
 
-async function handleRetryPaper(paperId) {
+async function handleUpgrade() {
+  const { data: { session } } = await supabase.auth.getSession()
+  const res = await fetch('/api/checkout', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${session.access_token}` }
+  })
+  const { url } = await res.json()
+  window.location.href = url
+}
+  
+  
+  async function handleRetryPaper(paperId) {
   await updatePaperStatus(paperId, 'uploaded')
   runExtractionPipeline(paperId)
 }
