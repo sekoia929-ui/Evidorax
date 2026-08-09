@@ -2,7 +2,7 @@
 'use client'
 import ThemeToggle from './ThemeToggle'
 import Logo from './Logo'
-export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, onDeleteProject, plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut }) {
+export default function Sidebar({ projects = [], activeProjectId, onSelectProject, onNewProject, onDeleteProject, plan = 'free', papersUsed = 0, papersLimit = 5, userEmail, onSignOut, onUpgrade }) {
   return (
     <aside style={{
       width: 260,
